@@ -29,13 +29,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+      # Plain clone rather than `forge install`, which wants to manage a git
+      # submodule inside the parent repo. remappings.txt points at lib/forge-std.
       - name: Install forge-std
         working-directory: contracts
-        run: |
-          git init -q .
-          git config user.email ci@example.com
-          git config user.name CI
-          forge install foundry-rs/forge-std
+        run: git clone --depth 1 https://github.com/foundry-rs/forge-std lib/forge-std
       - name: Build
         working-directory: contracts
         run: forge build --sizes
