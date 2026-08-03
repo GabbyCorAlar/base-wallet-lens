@@ -14,7 +14,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       # `npm install` rather than `npm ci` so the first push works before a
       # lockfile is committed. Switch to `npm ci` once package-lock.json exists.
       - run: npm install --no-audit --no-fund
@@ -32,7 +31,11 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@v1
       - name: Install forge-std
         working-directory: contracts
-        run: forge install foundry-rs/forge-std --no-git || forge install foundry-rs/forge-std
+        run: |
+          git init -q .
+          git config user.email ci@example.com
+          git config user.name CI
+          forge install foundry-rs/forge-std
       - name: Build
         working-directory: contracts
         run: forge build --sizes
